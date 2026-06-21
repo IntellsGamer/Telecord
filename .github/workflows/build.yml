@@ -25,8 +25,17 @@ jobs:
       run: |
         pyinstaller --onefile --windowed --icon=app.ico --name=Telecord webview_app.py
     
-    - name: Upload EXE
-      uses: actions/upload-artifact@v4
-      with:
-        name: Telecord-EXE
-        path: dist/Telecord.exe
+    - name: Commit and Push EXE to Repo
+      run: |
+        git config --global user.name "GitHub Actions"
+        git config --global user.email "actions@github.com"
+        
+        # Copy EXE to root
+        cp dist/Telecord.exe .
+        
+        # Add and commit
+        git add Telecord.exe
+        git commit -m "Auto-build: Update Telecord.exe [skip ci]" || echo "No changes to commit"
+        
+        # Push back to repo
+        git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:main
