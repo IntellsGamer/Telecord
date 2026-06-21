@@ -9,8 +9,13 @@ jobs:
   build:
     runs-on: windows-latest
     
+    permissions:
+      contents: write  # IMPORTANT: Grants write permission
+    
     steps:
     - uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
     
     - name: Setup Python
       uses: actions/setup-python@v5
@@ -25,13 +30,21 @@ jobs:
       run: |
         pyinstaller --onefile --windowed --icon=app.ico --name=Telecord webview_app.py
     
-    - name: Create Release and Upload EXE
-      uses: softprops/action-gh-release@v1
-      with:
-        tag_name: v1.0.${{ github.run_number }}
-        name: Telecord v1.0.${{ github.run_number }}
-        files: dist/Telecord.exe
-        draft: false
-        prerelease: false
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Commit and Push EXE
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        
+        # Copy EXE to root (optional, or keep in dist/)
+        # cp dist/Telecord.exe .  # Uncomment if you want it in root
+        
+        # Add the EXE
+        git add dist/Telecord.exe
+        
+        # Commit if there are changes
+        if git diff --staged --quiet; then
+          echo "No changes to commit"
+        else
+          git commit -m "Auto-build: Update Telecord.exe [skip ci]"
+          git push
+        fi
