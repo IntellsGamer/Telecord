@@ -3,12 +3,15 @@ name: Build Linux Executable
 on:
   push:
     branches: [ main ]
+    paths:
+      - 'linux_app.py'
+      - 'app.ico'
+      - '.github/workflows/*.yml'
   workflow_dispatch:
 
 jobs:
-  build:
+  build-linux:
     runs-on: ubuntu-latest
-    
     permissions:
       contents: write
     
@@ -27,7 +30,6 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y \
           gir1.2-webkit2-4.1 \
-          gir1.2-webkit2-4.0 \
           python3-gi \
           python3-gi-cairo \
           libgtk-3-dev \
@@ -36,8 +38,17 @@ jobs:
           libwebkit2gtk-4.1-dev \
           libgirepository1.0-dev \
           gcc \
-          patchelf
-          xvfb
+          patchelf \
+          xvfb \
+          libxcb-xinerama0 \
+          libxcb-icccm4 \
+          libxcb-image0 \
+          libxcb-keysyms1 \
+          libxcb-randr0 \
+          libxcb-render-util0 \
+          libxcb-shape0 \
+          libxcb-xfixes0 \
+          libxcb-xkb1
     
     - name: Install Python dependencies
       run: |
@@ -58,6 +69,12 @@ jobs:
           --hidden-import=gi.repository \
           --hidden-import=gi.repository.Gtk \
           --hidden-import=gi.repository.WebKit2 \
+          --hidden-import=PyQt5 \
+          --hidden-import=PyQt5.QtCore \
+          --hidden-import=PyQt5.QtGui \
+          --hidden-import=PyQt5.QtWidgets \
+          --hidden-import=PyQt5.QtWebEngineWidgets \
+          --collect-all=webview \
           linux_app.py
     
     - name: Test executable
