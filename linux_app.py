@@ -9,7 +9,7 @@ import sys
 from pathlib import Path
 
 # === CONFIGURATION ===
-TARGET_URL = "https://telecord.idebugger.qzz.io"  # CHANGE THIS
+TARGET_URL = "https://app.telecord.qzz.io"  # CHANGE THIS
 APP_NAME = "Telecord"
 ICON_FILE = "app.ico"
 # =====================
