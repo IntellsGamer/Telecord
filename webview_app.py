@@ -11,7 +11,7 @@ import ctypes
 from ctypes import wintypes
 
 # === CONFIGURATION ===
-TARGET_URL = "https://telecord.idebugger.qzz.io"  # CHANGE THIS
+TARGET_URL = "https://app.telecord.qzz.io"  # CHANGE THIS
 APP_NAME = "Telecord"
 ICON_FILE = "app.ico"  # Your icon file
 # =====================
